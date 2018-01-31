@@ -1,0 +1,27 @@
+{
+  "name": "ripple-server",
+  "version": "0.0.2",
+  "description": "Rippal node server",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TPeterW/Rippal-Server.git"
+  },
+  "author": "TPeterW",
+  "bugs": {
+    "url": "https://github.com/TPeterW/Rippal-Server/issues"
+  },
+  "homepage": "https://github.com/TPeterW/Rippal-Server#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "fs": "0.0.1-security",
+    "glob": "^7.1.2",
+    "mongodb": "^3.0.2",
+    "morgan": "^1.9.0",
+    "path": "^0.12.7"
+  }
+}
