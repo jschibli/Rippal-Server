@@ -2,6 +2,9 @@ const ROUTES = {
     INDEX: "/",
     LOGIN: "/login",
     REGISTER: "/register",
+    SHUTDOWN: "/shutdown",
+    TURNON: "/turnon",
+    CHANGE_PASSWORD: "/changepwd",
 };
 
 // const VIEWS = {

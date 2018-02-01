@@ -44,7 +44,7 @@ module.exports = function (app, config) {
 
             const controllers = glob.sync(config.root + '/controllers/*.js');
             controllers.forEach(controller => {
-                require(controller)(app, client);
+                require(controller)(app, client, config);
                 // import {default as func} from controller
 
                 console.log(">> Deployed controller: " + controller + "\n");
