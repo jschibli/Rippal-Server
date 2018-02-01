@@ -10,7 +10,7 @@ const config = {
             name: "rippal-server"
         },
         port: 3028,
-        db: 'mongodb://localhost:27017/rippal-dev',
+        db: 'mongodb://localhost:26017/rippal-dev',
         name: 'rippal-dev',
         storage: rootPath + '/data/db-development'
     },
@@ -21,7 +21,7 @@ const config = {
             name: "rippal-server"
         },
         port: 3028,
-        db: 'mongodb://localhost:27017/rippal-test',
+        db: 'mongodb://localhost:26017/rippal-test',
         name: 'rippal-test',
         storage: rootPath + '/data/db-test'
     },
@@ -32,7 +32,7 @@ const config = {
             name: "rippal-server"
         },
         port: 3028,
-        db: 'mongodb://localhost:27017/rippal-prod',
+        db: 'mongodb://localhost:26017/rippal-prod',
         name: 'rippal-prod',
         storage: rootPath + '/data/db-production'
     }

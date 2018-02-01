@@ -9,4 +9,4 @@ if [ ! -d $DBPATH ]; then
   mkdir data
 fi
 
-mongod --dbpath $DBPATH --smallfiles
+mongod --dbpath $DBPATH --port 26017 --smallfiles
