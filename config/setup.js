@@ -7,18 +7,20 @@ let MongoClient = require('mongodb').MongoClient;
 
 const CONSTANTS = require("../config/constants");
 
-let db, server;
+let client, server;
 
 module.exports = function (app, config) {
     app.use(logger('dev'));
 
     // connect to databse
     let url = config.db;
-    MongoClient.connect(url, function(err, client) {
+    MongoClient.connect(url, function(err, database) {
         if (err) {
             console.log(err.message);
             return;
         } else {
+            console.log("Connected to database...\n");
+            client = database;
             // insert status collection
             client.db(config.name).collection(CONSTANTS.COLLECTION.STATUS).findOne({
                 name: "status"
@@ -32,7 +34,7 @@ module.exports = function (app, config) {
                     }, (err, result) => {
                         if (err) {
                             console.log(err);
-                            db.close();
+                            client.close();
                             server.close();
                             process.exit(0);
                         }
@@ -42,7 +44,7 @@ module.exports = function (app, config) {
 
             const controllers = glob.sync(config.root + '/controllers/*.js');
             controllers.forEach(controller => {
-                require(controller)(app, db);
+                require(controller)(app, client);
                 // import {default as func} from controller
 
                 console.log(">> Deployed controller: " + controller + "\n");
@@ -89,8 +91,8 @@ module.exports = function (app, config) {
             });
 
 
-            // listening on port 3000
-            server = app.listen(3000, function () { 
+            // listening on port 3028
+            server = app.listen(3028, function () { 
                 console.log("Server listening on port 3028...\n");
             });
         }
@@ -102,7 +104,7 @@ module.exports = function (app, config) {
         readline.clearLine(process.stdout, 0);
         
         console.log("\nDisconnecting from database...");
-        db.close();
+        client.close();
 
         console.log("Killing server...");
         server.close();
