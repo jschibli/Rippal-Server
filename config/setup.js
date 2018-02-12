@@ -92,8 +92,8 @@ module.exports = function (app, config) {
 
 
             // listening on port 3028
-            server = app.listen(3028, function () { 
-                console.log("Server listening on port 3028...\n");
+            server = app.listen(config.port, function () { 
+                console.log("Server listening on port %d...\n", config.port);
             });
         }
     });
