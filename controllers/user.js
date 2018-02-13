@@ -6,6 +6,39 @@ const manager = require("../helpers/manager");
 module.exports = function(app, client, config) {
     
     /**
+     * Check if a certain user exists
+     * 
+     * Method: GET
+     * 
+     * res {
+     *      error
+     *      exists
+     * }
+     */
+    app.get(CONSTANTS.ROUTES.EXISTS, function(req, res, next) {
+        let email = req.query.email;
+        manager.findUserByEmail(client, email, config, function(err, user) {
+            if (err) manager.handleError(err, res);
+            else {
+                // user not found
+                if (!user) {
+                    console.log("User not found");
+                    res.status(404).json({
+                        error: "User not found",
+                        exists: false
+                    });
+                } else {
+                    console.log("Found user");
+                    res.status(200).json({
+                        error: "",
+                        exists: true
+                    })
+                }
+            }
+        });
+    });
+
+    /**
      * Log into server
      * 
      * Method: POST
