@@ -57,7 +57,7 @@ module.exports = function(app, client, config) {
     app.post(CONSTANTS.ROUTES.REGISTER, bodyParser.urlencoded({ extended: true }), function(req, res, next) {
         let email = req.body.email;
         let password = req.body.password;
-        manager.findUserByEmail(db, email, config, function(err, user) {
+        manager.findUserByEmail(client, email, config, function(err, user) {
             // internal error
             if (err) manager.handleError(err, res);
             else {
@@ -66,7 +66,7 @@ module.exports = function(app, client, config) {
                     console.log("User exists");
                     res.status(403).json({ error: "User already exists" });
                 } else {
-                    manager.createUser(db, email, password, function(err, createdUser) {
+                    manager.createUser(client, email, password, config, function(err, createdUser) {
                         if (err) manager.handleError(err, res);
                         else {
                             if (!createdUser) {
@@ -99,7 +99,7 @@ module.exports = function(app, client, config) {
         let oldPassword = req.body.oldPassword;
         let newPassword = req.body.newPassword;
 
-        manager.findUserByEmail(db, email, config, function(err, user) {
+        manager.findUserByEmail(client, email, config, function(err, user) {
             // internal error
             if (err) manager.handleError(err, res);
             else {
@@ -111,7 +111,7 @@ module.exports = function(app, client, config) {
                     console.log("Wrong old password");
                     res.status(401).json({ error: "Password incorrect" });
                 } else {
-                    db.collection(CONSTANTS.COLLECTION.USER).updateOne({
+                    client.db(config.name).collection(CONSTANTS.COLLECTION.USER).updateOne({
                         email: email
                     }, {
                         $set: { password: newPassword }

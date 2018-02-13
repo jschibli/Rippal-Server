@@ -95,7 +95,7 @@ module.exports = function(app, config) {
             const certificate = fs.readFileSync('./credentials/rippal.crt', 'utf8');
             const credentials = {key: privateKey, cert: certificate};
             // listening on port 6626
-            let server = https.createServer(credentials, app)
+            server = https.createServer(credentials, app)
             server.listen(config.port, function () { 
                 console.log("Server listening on port %d...\n", config.port);
             });

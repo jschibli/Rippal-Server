@@ -47,15 +47,14 @@ function findUserById(client, id, config, callback) {
 /**
  * Create user in database
  */
-function createUser(db, email, password, config, callback) {
+function createUser(client, email, password, config, callback) {
     client.db(config.name).collection(CONSTANTS.COLLECTION.USER).insertOne({
         email: email,
-        password: password,
-        verified: false
+        password: password
     }, function(err, result) {
         if (err) callback(err, null);       // back to router for handling
         else {
-            findUserByEmail(db, email, function(err, user) {
+            findUserByEmail(client, email, function(err, user) {
                 if (err) callback(err, null);
                 else callback(err, getUserFromBson(user));
             });
