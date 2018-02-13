@@ -72,7 +72,6 @@ module.exports = function(app, client, config) {
                             if (!createdUser) {
                                 res.status(500).json({ error: "Unknown error" });
                             } else {
-                                manager.sendVerificationEmail(createdUser, null);
                                 res.status(200).json({
                                     error: "",
                                     user: createdUser

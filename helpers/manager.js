@@ -54,7 +54,7 @@ function createUser(client, email, password, config, callback) {
     }, function(err, result) {
         if (err) callback(err, null);       // back to router for handling
         else {
-            findUserByEmail(client, email, function(err, user) {
+            findUserByEmail(client, email, config, function(err, user) {
                 if (err) callback(err, null);
                 else callback(err, getUserFromBson(user));
             });
