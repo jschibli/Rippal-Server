@@ -4,12 +4,13 @@ let glob = require('glob');
 // let favicon = require('serve-favicon');
 let fs = require('fs');
 let MongoClient = require('mongodb').MongoClient;
+let https = require('https')
 
-const CONSTANTS = require("../config/constants");
+let CONSTANTS = require("../config/constants");
 
 let client, server;
 
-module.exports = function (app, config) {
+module.exports = function(app, config) {
     app.use(logger('dev'));
 
     // connect to databse
@@ -90,9 +91,12 @@ module.exports = function (app, config) {
                 res.json({ error: error.message });
             });
 
-
-            // listening on port 3028
-            server = app.listen(config.port, function () { 
+            const privateKey  = fs.readFileSync('./credentials/rippal.key', 'utf8');
+            const certificate = fs.readFileSync('./credentials/rippal.crt', 'utf8');
+            const credentials = {key: privateKey, cert: certificate};
+            // listening on port 6626
+            let server = https.createServer(credentials, app)
+            server.listen(config.port, function () { 
                 console.log("Server listening on port %d...\n", config.port);
             });
         }

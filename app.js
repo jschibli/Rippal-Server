@@ -1,6 +1,6 @@
-const express = require('express');
-const config = require('./config/config');
-const setup = require('./config/setup');
+let express = require('express');
+let config = require('./config/config');
+let setup = require('./config/setup');
 
 const app = express();
 setup(app, config);
