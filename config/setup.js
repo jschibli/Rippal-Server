@@ -100,8 +100,8 @@ module.exports = function(app, config) {
             //     console.log("Server listening on port %d...\n", config.port);
             // });
 
-            server = app.listen(6626, function() { 
-                console.log("Server listening on port %d...\n", config.port);
+            server = app.listen(3000, function() { 
+                console.log("Server listening on port %d...\n", 3000);
             });
         }
     });
