@@ -4,7 +4,7 @@ let glob = require('glob');
 // let favicon = require('serve-favicon');
 let fs = require('fs');
 let MongoClient = require('mongodb').MongoClient;
-let https = require('https')
+let https = require('https');
 
 let CONSTANTS = require("../config/constants");
 
