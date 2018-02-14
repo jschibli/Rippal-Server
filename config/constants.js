@@ -1,6 +1,7 @@
 const ROUTES = {
     INDEX: "/",
     EXISTS: "/exists",
+    UPDATE: "/update",
     LOGIN: "/login",
     REGISTER: "/register",
     SHUTDOWN: "/shutdown",

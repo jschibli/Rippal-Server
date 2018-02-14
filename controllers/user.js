@@ -39,6 +39,48 @@ module.exports = function(app, client, config) {
     });
 
     /**
+     * Update basic user information
+     * 
+     * Method: POST
+     * 
+     * res {
+     *      error
+     *      exists
+     * }
+     */
+    app.post(CONSTANTS.ROUTES.UPDATE, bodyParser.urlencoded({ extended: true }), function(req, res, next) {
+        let email = req.body.email;
+        let firstName = req.body.firstName;
+        let lastName = req.body.lastName;
+        let userId = req.body.id;
+        manager.findUserByEmail(client, email, config, function(err, user) {
+            if (err) manager.handleError(err, res);
+            else {
+                // user not found
+                if (!user) {
+                    console.log("User not found");
+                    res.status(404).json({
+                        error: "User not found",
+                        exists: false,
+                    });
+                } else {
+                    manager.updateUserInfo(client, email, firstName, lastName, userId, config, function(err) {
+                        if (!err) {
+                            res.status(200).json({
+                                error: "",
+                            })
+                        } else {
+                            res.status(500).json({
+                                error: err,
+                            })
+                        }
+                    });
+                }
+            }
+        });
+    });
+
+    /**
      * Log into server
      * 
      * Method: POST
@@ -90,6 +132,9 @@ module.exports = function(app, client, config) {
     app.post(CONSTANTS.ROUTES.REGISTER, bodyParser.urlencoded({ extended: true }), function(req, res, next) {
         let email = req.body.email;
         let password = req.body.password;
+        let firstName = req.body.firstName;
+        let lastName = req.body.lastName;
+        let userId = req.body.id;
         manager.findUserByEmail(client, email, config, function(err, user) {
             // internal error
             if (err) manager.handleError(err, res);
@@ -99,7 +144,7 @@ module.exports = function(app, client, config) {
                     console.log("User exists");
                     res.status(403).json({ error: "User already exists" });
                 } else {
-                    manager.createUser(client, email, password, config, function(err, createdUser) {
+                    manager.createUser(client, email, password, firstName, lastName, userId, config, function(err, createdUser) {
                         if (err) manager.handleError(err, res);
                         else {
                             if (!createdUser) {

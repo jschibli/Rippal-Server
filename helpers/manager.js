@@ -44,13 +44,30 @@ function findUserById(client, id, config, callback) {
     });
 }
 
+function updateUserInfo(client, email, firstName, lastName, userId, config, callback) {
+    client.db(config.name).collection(CONSTANTS.COLLECTION.USER).updateOne({
+        email: email
+    }, {
+        $set: {
+            firstName: firstName,
+            lastName: lastName,
+            userId: userId,
+        }
+    }, function(err, doc) {
+        callback(err);
+    });
+}
+
 /**
  * Create user in database
  */
-function createUser(client, email, password, config, callback) {
+function createUser(client, email, password, firstName, lastName, userId, config, callback) {
     client.db(config.name).collection(CONSTANTS.COLLECTION.USER).insertOne({
         email: email,
-        password: password
+        password: password,
+        firstName: firstName,
+        lastName: lastName,
+        userId: userId
     }, function(err, result) {
         if (err) callback(err, null);       // back to router for handling
         else {
@@ -96,6 +113,7 @@ module.exports = {
     handleError,
     findUserByEmail,
     findUserById,
+    updateUserInfo,
     createUser,
     getObjectId,
 }
