@@ -53,6 +53,8 @@ function updateUserInfo(client, email, firstName, lastName, userId, config, call
             lastName: lastName,
             userId: userId,
         }
+    }, {
+        upsert: false
     }, function(err, doc) {
         callback(err);
     });
