@@ -91,17 +91,13 @@ module.exports = function(app, config) {
                 res.json({ error: error.message });
             });
 
-            // const privateKey  = fs.readFileSync('./credentials/rippal.key', 'utf8');
-            // const certificate = fs.readFileSync('./credentials/rippal.crt', 'utf8');
-            // const credentials = {key: privateKey, cert: certificate};
-            // // listening on port 6626
-            // server = https.createServer(credentials, app)
-            // server.listen(config.port, function() { 
-            //     console.log("Server listening on port %d...\n", config.port);
-            // });
-
-            server = app.listen(3000, function() { 
-                console.log("Server listening on port %d...\n", 3000);
+            const privateKey  = fs.readFileSync('./credentials/rippal.key', 'utf8');
+            const certificate = fs.readFileSync('./credentials/rippal.crt', 'utf8');
+            const credentials = {key: privateKey, cert: certificate};
+            // listening on port 3026
+            server = https.createServer(credentials, app)
+            server.listen(config.port, function() { 
+                console.log("Server listening on port %d...\n", config.port);
             });
         }
     });
