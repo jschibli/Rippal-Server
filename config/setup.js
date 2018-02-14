@@ -1,7 +1,7 @@
 let bodyParser = require('body-parser');
 let logger = require('morgan');
 let glob = require('glob');
-// let favicon = require('serve-favicon');
+let favicon = require('serve-favicon');
 let fs = require('fs');
 let MongoClient = require('mongodb').MongoClient;
 let https = require('https');
@@ -60,7 +60,7 @@ module.exports = function(app, config) {
             }));
             
             // external module for handling favourite icon
-            // app.use(favicon(__dirname + "/../public/img/favicon.ico"));
+            app.use(favicon(__dirname + "/../public/img/favicon.ico"));
             
             // view engine
             // app.set('views', config.root + '/public/views');
@@ -91,17 +91,18 @@ module.exports = function(app, config) {
                 res.json({ error: error.message });
             });
 
-            const privateKey  = fs.readFileSync('./credentials/rippal.key', 'utf8');
-            const certificate = fs.readFileSync('./credentials/rippal.crt', 'utf8');
-            const credentials = {key: privateKey, cert: certificate};
-            // listening on port 6626
-            server = app.listen(6626, function() { 
-                console.log("Server listening on port %d...\n", config.port);
-            });
+            // const privateKey  = fs.readFileSync('./credentials/rippal.key', 'utf8');
+            // const certificate = fs.readFileSync('./credentials/rippal.crt', 'utf8');
+            // const credentials = {key: privateKey, cert: certificate};
+            // // listening on port 6626
             // server = https.createServer(credentials, app)
             // server.listen(config.port, function() { 
             //     console.log("Server listening on port %d...\n", config.port);
             // });
+
+            server = app.listen(6626, function() { 
+                console.log("Server listening on port %d...\n", config.port);
+            });
         }
     });
 
