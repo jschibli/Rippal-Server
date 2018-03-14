@@ -44,7 +44,7 @@ function findUserById(client, id, config, callback) {
     });
 }
 
-function updateUserInfo(client, email, firstName, lastName, userId, config, callback) {
+function updateUserInfo(client, email, firstName, lastName, userId, location, position, config, callback) {
     client.db(config.name).collection(CONSTANTS.COLLECTION.USER).updateOne({
         email: email
     }, {
@@ -52,6 +52,8 @@ function updateUserInfo(client, email, firstName, lastName, userId, config, call
             firstName: firstName,
             lastName: lastName,
             userId: userId,
+            location: location,
+            position: position
         }
     }, {
         upsert: false

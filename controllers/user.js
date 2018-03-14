@@ -52,7 +52,9 @@ module.exports = function(app, client, config) {
         let email = req.body.email;
         let firstName = req.body.firstName;
         let lastName = req.body.lastName;
-        let userId = req.body.id;
+        let userId = req.body.userId;
+        let location = req.body.location;
+        let position = req.body.position;
         manager.findUserByEmail(client, email, config, function(err, user) {
             if (err) manager.handleError(err, res);
             else {
@@ -64,7 +66,7 @@ module.exports = function(app, client, config) {
                         exists: false,
                     });
                 } else {
-                    manager.updateUserInfo(client, email, firstName, lastName, userId, config, function(err) {
+                    manager.updateUserInfo(client, email, firstName, lastName, userId, location, position, config, function(err) {
                         if (!err) {
                             res.status(200).json({
                                 error: "",
