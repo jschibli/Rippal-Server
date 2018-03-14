@@ -110,6 +110,7 @@ module.exports = function(app, client, config) {
                     });
                 // all good
                 } else {
+                    delete user.password;
                     res.status(200).json({
                         error: "",
                         user: user

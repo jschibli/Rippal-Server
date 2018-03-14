@@ -86,9 +86,10 @@ function createUser(client, email, password, firstName, lastName, userId, config
  */
 function getUserFromBson(doc) {
     let user = {};
-    user['_id'] = doc._id;
     user['email'] = doc.email;
-    user['verified'] = doc.verified;
+    user['userId'] = doc.userId;
+    user['firstName'] = doc.firstName;
+    user['lastName'] = doc.lastName;
     return user;
 }
 
@@ -98,9 +99,10 @@ function getUserFromBson(doc) {
 function getUserFromBsonWithPassword(doc) {
     let user = {};
     user['email'] = doc.email;
-    user['verified'] = doc.verified;
     user['password'] = doc.password;
-    user['_id'] = doc._id;
+    user['userId'] = doc.userId;
+    user['firstName'] = doc.firstName;
+    user['lastName'] = doc.lastName;
     return user;
 }
 
