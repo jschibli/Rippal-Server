@@ -92,6 +92,8 @@ function getUserFromBson(doc) {
     user['userId'] = doc.userId;
     user['firstName'] = doc.firstName;
     user['lastName'] = doc.lastName;
+    user['location'] = doc.location;
+    user['position'] = doc.position;
     return user;
 }
 
@@ -105,6 +107,8 @@ function getUserFromBsonWithPassword(doc) {
     user['userId'] = doc.userId;
     user['firstName'] = doc.firstName;
     user['lastName'] = doc.lastName;
+    user['location'] = doc.location;
+    user['position'] = doc.position;
     return user;
 }
 
