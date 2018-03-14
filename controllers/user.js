@@ -137,7 +137,9 @@ module.exports = function(app, client, config) {
         let password = req.body.password;
         let firstName = req.body.firstName;
         let lastName = req.body.lastName;
-        let userId = req.body.id;
+        let userId = req.body.userId;
+        let location = req.body.location;
+        let position = req.body.position;
         manager.findUserByEmail(client, email, config, function(err, user) {
             // internal error
             if (err) manager.handleError(err, res);
