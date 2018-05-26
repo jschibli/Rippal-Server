@@ -16,11 +16,11 @@
   },
   "homepage": "https://github.com/TPeterW/Rippal-Server#readme",
   "dependencies": {
-    "body-parser": "^1.18.2",
+    "body-parser": "^1.18.3",
     "express": "^4.16.3",
     "fs": "0.0.1-security",
     "glob": "^7.1.2",
-    "mongodb": "^3.0.7",
+    "mongodb": "^3.0.8",
     "morgan": "^1.9.0",
     "path": "^0.12.7",
     "serve-favicon": "^2.5.0"
