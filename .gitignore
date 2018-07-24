@@ -1,6 +1,10 @@
 # Project
 credentials/
 
+# Data
+*.csv
+!dummy_users.csv
+
 # Logs
 logs
 *.log

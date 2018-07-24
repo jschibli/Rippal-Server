@@ -2,6 +2,7 @@ const ROUTES = {
     INDEX: "/",
     EXISTS: "/exists",
     UPDATE: "/update",
+    UPDATE_TOKEN: "/update/token",
     LOGIN: "/login",
     REGISTER: "/register",
     SHUTDOWN: "/shutdown",

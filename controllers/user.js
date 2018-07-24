@@ -82,6 +82,18 @@ module.exports = function(app, client, config) {
         });
     });
 
+    app.put(CONSTANTS.ROUTES.UPDATE_TOKEN, bodyParser.urlencoded({ extended: true }), function(req, res, next) {
+        let fbToken = req.body.fbToken;
+        let liToken = req.body.liToken;
+
+        console.log(fbToken);
+        console.log(liToken);
+
+        res.status(200).json({
+            error: null,
+        });
+    });
+
     /**
      * Log into server
      * 
