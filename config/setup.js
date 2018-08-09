@@ -11,109 +11,109 @@ let CONSTANTS = require("../config/constants");
 let client, server;
 
 module.exports = function(app, config) {
-    app.use(logger('dev'));
+	app.use(logger('dev'));
 
-    // connect to databse
-    let url = config.db;
-    MongoClient.connect(url, function(err, database) {
-        if (err) {
-            console.log(err.message);
-            return;
-        } else {
-            console.log("Connected to database...\n");
-            client = database;
-            // insert status collection
-            client.db(config.name).collection(CONSTANTS.COLLECTION.STATUS).findOne({
-                name: "status"
-            }, function(err, doc) {
-                if (err) {
-                    console.log(err);
-                } else if (!doc) {
-                    client.db(config.name).collection(CONSTANTS.COLLECTION.STATUS).insertOne({
-                        name: "status",
-                        running: true
-                    }, (err, result) => {
-                        if (err) {
-                            console.log(err);
-                            client.close();
-                            server.close();
-                            process.exit(0);
-                        }
-                    });
-                }
-            });
+	// connect to databse
+	let url = config.db;
+	MongoClient.connect(url, function(err, database) {
+		if (err) {
+			console.log(err.message);
+			return;
+		} else {
+			console.log("Connected to database...\n");
+			client = database;
+			// insert status collection
+			client.db(config.name).collection(CONSTANTS.COLLECTION.STATUS).findOne({
+				name: "status"
+			}, function(err, doc) {
+				if (err) {
+					console.log(err);
+				} else if (!doc) {
+					client.db(config.name).collection(CONSTANTS.COLLECTION.STATUS).insertOne({
+						name: "status",
+						running: true
+					}, (err, result) => {
+						if (err) {
+							console.log(err);
+							client.close();
+							server.close();
+							process.exit(0);
+						}
+					});
+				}
+			});
 
-            const controllers = glob.sync(config.root + '/controllers/*.js');
-            controllers.forEach(controller => {
-                require(controller)(app, client, config);
-                // import {default as func} from controller
+			const controllers = glob.sync(config.root + '/controllers/*.js');
+			controllers.forEach(controller => {
+				require(controller)(app, client, config);
+				// import {default as func} from controller
 
-                console.log(">> Deployed controller: " + controller + "\n");
-                // This means "for each controller file, load that file using require, then
-                // call the default function that's exported, with app as a parameter.
-                // Those default functions just say 'hey app, use these routes.'"
-            });
-            
-            app.use(bodyParser.json());
-            app.use(bodyParser.urlencoded({
-                extended: true
-            }));
-            
-            // external module for handling favourite icon
-            app.use(favicon(__dirname + "/../public/img/favicon.ico"));
-            
-            // view engine
-            // app.set('views', config.root + '/public/views');
-            // app.set("view engine", "pug");
-            
-            // middleware for handling file downloads
-            app.get("*", function(req, res, next) {
-                if (fs.existsSync(config.root + req.url)) {
-                    let file = config.root + req.url;
-                    res.download(file);
-                } else {
-                    const err = new Error("Not Found");
-                    res.status(404);
-                    next(err);
-                }
-            });
+				console.log(">> Deployed controller: " + controller + "\n");
+				// This means "for each controller file, load that file using require, then
+				// call the default function that's exported, with app as a parameter.
+				// Those default functions just say 'hey app, use these routes.'"
+			});
 
-            // middlewares for handling uncaught errors
-            app.use((req, res, next) => {
-                const err = new Error("Not Found");
-                res.status(404);
-                next(err);
-            });
+			app.use(bodyParser.json());
+			app.use(bodyParser.urlencoded({
+				extended: true
+			}));
 
-            app.use((err, req, res, next) => {
-                console.log(err);
-                res.status(err.status || 500);
-                res.json({ error: error.message });
-            });
+			// external module for handling favourite icon
+			app.use(favicon(__dirname + "/../public/img/favicon.ico"));
 
-            const privateKey  = fs.readFileSync('./credentials/rippal.key', 'utf8');
-            const certificate = fs.readFileSync('./credentials/rippal.crt', 'utf8');
-            const credentials = {key: privateKey, cert: certificate};
-            // listening on port 3026
-            server = https.createServer(credentials, app)
-            server.listen(config.port, function() { 
-                console.log("Server listening on port %d...\n", config.port);
-            });
-        }
-    });
+			// view engine
+			// app.set('views', config.root + '/public/views');
+			// app.set("view engine", "pug");
 
-    // when ^C is pressed
-    process.on('SIGINT', function() {
-        const readline = require('readline');
-        readline.clearLine(process.stdout, 0);
-        
-        console.log("\nDisconnecting from database...");
-        client.close();
+			// middleware for handling file downloads
+			app.get("*", function(req, res, next) {
+				if (fs.existsSync(config.root + req.url)) {
+					let file = config.root + req.url;
+					res.download(file);
+				} else {
+					const err = new Error("Not Found");
+					res.status(404);
+					next(err);
+				}
+			});
 
-        console.log("Killing server...");
-        server.close();
+			// middlewares for handling uncaught errors
+			app.use((req, res, next) => {
+				const err = new Error("Not Found");
+				res.status(404);
+				next(err);
+			});
 
-        console.log("Bye!");
-        process.exit(0);
-    })
+			app.use((err, req, res, next) => {
+				console.log(err);
+				res.status(err.status || 500);
+				res.json({ error: error.message });
+			});
+
+			const privateKey  = fs.readFileSync('./credentials/rippal.key', 'utf8');
+			const certificate = fs.readFileSync('./credentials/rippal.crt', 'utf8');
+			const credentials = {key: privateKey, cert: certificate};
+			// listening on port 3026
+			server = https.createServer(credentials, app)
+			server.listen(config.port, function() { 
+				console.log("Server listening on port %d...\n", config.port);
+			});
+		}
+	});
+
+	// when ^C is pressed
+	process.on('SIGINT', function() {
+		const readline = require('readline');
+		readline.clearLine(process.stdout, 0);
+
+		console.log("\nDisconnecting from database...");
+		client.close();
+
+		console.log("Killing server...");
+		server.close();
+
+		console.log("Bye!");
+		process.exit(0);
+	})
 }

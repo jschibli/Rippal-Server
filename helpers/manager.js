@@ -44,6 +44,32 @@ function findUserById(client, id, config, callback) {
     });
 }
 
+/**
+ * Find all users in databse
+ */
+function findAllUsers(client, config, callback) {
+    client.db(config.name).collection(CONSTANTS.COLLECTION.USER).find({}, function(err, cursor) {
+        if (err) {
+			callback(err, null);
+		}
+        else if (!cursor){ 
+			callback(null, null);
+		}
+        else{
+			//callback(null, getUserFromBsonWithPassword(doc));
+			//console.log(cursor.toArray());
+			cursor.toArray().then(function(users){
+				callback(null, users);
+			})
+			.catch(function(err){
+				callback(err, null);
+			});
+		}
+    });
+}
+
+
+
 function updateUserInfo(client, email, firstName, lastName, userId, location, position, config, callback) {
     client.db(config.name).collection(CONSTANTS.COLLECTION.USER).updateOne({
         email: email
@@ -60,6 +86,24 @@ function updateUserInfo(client, email, firstName, lastName, userId, location, po
     }, function(err, doc) {
         callback(err);
     });
+}
+
+/*
+ * Update the Location (latitude and longitude) of a user
+ */
+function updateUserCoordinates(client, email, latitude, longitude, config, callback){
+	client.db(config.name).collection(CONSTANTS.COLLECTION.USER).updateOne({
+		email: email
+	}, {
+		$set: { 
+			latitude: latitude,
+			longitude: longitude,
+		}
+	}, {
+		upsert: false
+	}, function(err, doc) {
+		callback(err);
+	});
 }
 
 /**
@@ -92,8 +136,10 @@ function getUserFromBson(doc) {
     user['userId'] = doc.userId;
     user['firstName'] = doc.firstName;
     user['lastName'] = doc.lastName;
-    user['location'] = doc.location;
+    user['latitude'] = doc.latitude;
+    user['longitude'] = doc.longitude;
     user['position'] = doc.position;
+    user['cell'] = doc.cell;
     return user;
 }
 
@@ -107,8 +153,10 @@ function getUserFromBsonWithPassword(doc) {
     user['userId'] = doc.userId;
     user['firstName'] = doc.firstName;
     user['lastName'] = doc.lastName;
-    user['location'] = doc.location;
+    user['latitude'] = doc.latitude;
+    user['longitude'] = doc.longitude;
     user['position'] = doc.position;
+    user['cell'] = doc.cell;
     return user;
 }
 
@@ -123,7 +171,9 @@ module.exports = {
     handleError,
     findUserByEmail,
     findUserById,
+	findAllUsers,
     updateUserInfo,
+	updateUserCoordinates,
     createUser,
     getObjectId,
 }

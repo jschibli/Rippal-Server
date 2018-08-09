@@ -2,6 +2,7 @@ const CONSTANTS = require("../config/constants");
 const SECRETS = require("../secret");
 const bodyParser = require('body-parser');
 const manager = require("../helpers/manager");
+const geolib = require('geolib');
 
 module.exports = function(app, client, config) {
     
@@ -37,6 +38,63 @@ module.exports = function(app, client, config) {
             }
         });
     });
+
+	app.get(CONSTANTS.ROUTES.GET_ALL_USERS, function(req, res, next){
+		manager.findAllUsers(client, config, function(err,users){
+			if(err){
+				manager.handleError(err, res);
+			}
+			else{
+				console.log(users);
+			}
+		});
+	});
+
+	app.get(CONSTANTS.ROUTES.FIND_NEARBY_USERS, function(req, res, next){
+		let email = req.query.email;
+		let distance = req.query.distance;
+
+		console.log(email);
+		manager.findUserByEmail(client, email, config, function(err, user){
+			if(err){
+				manager.handleError(err, res);
+			}
+			else{
+				console.log(user);
+				var latitude = user.latitude;
+				var longitude = user.longitude;
+
+				manager.findAllUsers(client, config, function(err,users){
+					if(err){
+						manager.handleError(err, res);
+					}
+					else{
+						//console.log(users);dd
+						var nearby = [];
+
+						for(i = 0; i < users.length; i++){
+							var u = users[i];
+							if (u.email != email){
+								if(u.latitude && u.longitude && u.latitude != '' && u.longitude != ''){
+									var d = geolib.getDistance(
+										{latitude: latitude, longitude:longitude}, 
+										{latitude: u.latitude, longitude: u.longitude}
+									);
+									if(d <= distance){
+										u['distance'] = d;
+										nearby.push(u);
+									}
+								}
+							}
+						}
+						console.log(nearby);
+						res.status(200).json({error: "", users: nearby});
+					}
+				});
+			}
+		});
+	});
+
 
     /**
      * Update basic user information
@@ -81,6 +139,39 @@ module.exports = function(app, client, config) {
             }
         });
     });
+
+	app.post(CONSTANTS.ROUTES.UPDATE_COORDINATES, bodyParser.urlencoded({ extended: true }), function(req, res, next) {
+        let email = req.body.email;
+        let latitude = req.body.latitude;
+        let longitude = req.body.longitude;
+
+        manager.findUserByEmail(client, email, config, function(err, user) {
+            if(err) {
+				manager.handleError(err, res);
+			}
+            else {
+                // user doesn't exist
+                if (!user) {
+                    console.log("User not found");
+                    res.status(404).json({ 
+						error: "User not found",
+						exists: false,
+					});
+                } 
+				else {
+					manager.updateUserCoordinates(client, email, latitude, longitude, config, function(err){
+                        if(err) {
+							manager.handleError(err, res);
+						}
+                        else {
+							res.status(200).json({ error: "" });
+						}
+                    });
+                }
+            }
+        });
+    });
+
 
     app.put(CONSTANTS.ROUTES.UPDATE_TOKEN, bodyParser.urlencoded({ extended: true }), function(req, res, next) {
         let fbToken = req.body.fbToken;
