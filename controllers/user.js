@@ -69,7 +69,7 @@ module.exports = function(app, client, config) {
 						manager.handleError(err, res);
 					}
 					else{
-						//console.log(users);dd
+						//console.log(users);
 						var nearby = [];
 
 						for(i = 0; i < users.length; i++){
